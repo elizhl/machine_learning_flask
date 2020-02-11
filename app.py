@@ -99,8 +99,8 @@ def get_answer():
     return {'success': True, 'answer': res}
 
 # Slack Implementation
-@app.route('/', methods=['POST', 'GET'])
-def hello_w():
+@app.route('/slack/get-answer', methods=['POST', 'GET'])
+def slack_get_answer():
     
     token = ""
     
