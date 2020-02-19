@@ -15,6 +15,7 @@ nlp = spacy.load('en_core_web_sm')
 # Prepare the data
 data_file = open(file).read()
 data_json = json.loads(data_file)
+print(data_json)
 
 # Classification accordingly to the data in the json file
 documents = []
@@ -43,6 +44,9 @@ for intent in data_json['intents']:
 # Clean up the tags and words
 tags = sorted(list(set(tags)))
 words = sorted(list(set(words)))
+
+print("this are tagssss", tags)
+print("this is words", words)
 
 pickle.dump(tags, open('tags.pkl', 'wb'))
 pickle.dump(words, open('words.pkl', 'wb'))

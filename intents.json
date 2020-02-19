@@ -79,10 +79,84 @@
       "tag": "uptime",
       "patterns": [
         "Since when you are up?",
-        "Uptime"
+        "Give me your uptime"
       ],
       "responses": [
         "This is not the response you're looking for, but we have to connect this bot to Vault to show you the uptime :-)"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "status",
+      "patterns": [
+        "Give me the vault status"
+      ],
+      "responses": [
+        "for, but we have to connect this bot to Vault to show you the uptime :-)"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "root",
+      "patterns": [
+        "Are you root?",
+        "This token belongs to root?"
+      ],
+      "responses": [
+        "se you're looking for, but we have to connect this uptime :-)"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "auditdevices",
+      "patterns": [
+        "Enabled devices",
+        "Give me the enable devices"
+      ],
+      "responses": [
+        "ault to show you the uptime :-)"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "authmethods",
+      "patterns": [
+        "Authentication methods",
+        "Auth methods",
+        "What auth methods are enabled?"
+      ],
+      "responses": [
+        "This ooking for, but we have to connect this bot to Vault toe :-)"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "disableauthmethod",
+      "patterns": [
+        "Please disable this auth method"
+      ],
+      "responses": [
+        "This is not the we have to connect this bot toe uptime :-)"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "revoketoken",
+      "patterns": [
+        "Please revoke this token"
+      ],
+      "responses": [
+        "This is not the respon for, but we ault to show you the uptime :-)"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "readsecret",
+      "patterns": [
+        "Show me this secret"
+      ],
+      "responses": [
+        "This is not the  to connect this bot to Vaultow you the uptime :-)"
       ],
       "context": [""]
     }

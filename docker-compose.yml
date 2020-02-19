@@ -2,7 +2,11 @@ version: '3'
 services:
     web:
         build: .
+        env_file:
+            - env.sh
         ports:
             - "5000:5000"
         volumes:
             - .:/app
+        networks:
+            - default

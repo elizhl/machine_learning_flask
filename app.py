@@ -4,16 +4,19 @@ from flask import request
 
 from keras.models import load_model
 from slackclient import SlackClient
+from lib.vault import Vault
 
 import keras.backend as kb
 import keras.backend.tensorflow_backend as tb
 
+import os
 import numpy as np
 import json
 import pickle
 import random
 import spacy
 import requests
+import pymsteams
 
 app = Flask(__name__)
 
@@ -25,7 +28,15 @@ intents = json.loads(open(data_json).read())
 words = pickle.load(open(words_file, 'rb'))
 tags = pickle.load(open(tags_file, 'rb'))
 
+print("this is tags", tags)
+print("this is words", words)
+
 npl = spacy.load('en_core_web_sm')
+
+addr = os.environ['VAULT_ADDR']
+token = os.environ['VAULT_TOKEN']
+
+vault = Vault(addr, token)
 
 def clean_up_sentence(sentence):
     response = []
@@ -38,7 +49,7 @@ def clean_up_sentence(sentence):
     return response
 
 # return bag of words array: 0 or 1 for each word in the bag that exists in the sentence
-def bow(sentence, words, show_details=False):
+def bow(sentence, words, show_details=True):
     # tokenize the pattern
     sentence_words = clean_up_sentence(sentence)
     # bag of words - matrix of N words, vocabulary matrix
@@ -74,7 +85,13 @@ def getResponse(ints, intents_json):
     list_of_intents = intents_json['intents']
     for i in list_of_intents:
         if(i['tag']== tag):
-            result = random.choice(i['responses'])
+            # Check tags to call vault when necessary        
+            if tag == "uptime":
+                result = vault.get_status()
+            elif tag == "status":
+                result = vault.get_status()
+            else:
+                result = random.choice(i['responses'])
             break
     return result
 
@@ -101,25 +118,55 @@ def get_answer():
 # Slack Implementation
 @app.route('/slack/get-answer', methods=['POST', 'GET'])
 def slack_get_answer():
+    # Slack bot token
+    token = "xoxb-918589458594-931400580288-XUGueuC5873ZhDy6yG51nu89"
     
-    token = ""
-    
+    # Check if this request is a handshake
     if request.json.get('challenge', False):
         return {'challenge': request.json.get('challenge')}
     
     else:
+        # Check if the last event was a bot response
         if not request.json['event'].get('bot_id', False):
+            # Get the message
             msg = request.json['event']['text']
+            
+            # Get the response
             res = chatbot_response(msg)
             
+            # send the message
             slack_client = SlackClient(token)
             slack_client.api_call("chat.postMessage", channel="#robochat", text=res)
             
         return {'success': True}
+    
+# Microsoft Teams Implementation
+@app.route('/mt/get-answer', methods=['POST', 'GET'])
+def mt_get_answer():
+    msg = request.json.get('text', False)
+    
+    if msg:
+        res = chatbot_response(msg)
+        
+        webhook_url = "https://outlook.office.com/webhook/\
+                66cbaada-14f1-4c2f-8639-22993cb92447@125b0b2a-\
+                fc11-406b-8ee5-edc4003afbf3/IncomingWebhook/92b\
+                01d770e4c44a6801c1a2062a9efaf/0dc1d84a-92f3-4bf4\
+                -82aa-4a9b6316e748"
+                
+        # You must create the connectorcard object with the Microsoft Webhook URL
+        myTeamsMessage = pymsteams.connectorcard(webhook_url)
+
+        # Add text to the message.
+        myTeamsMessage.text(res)
+
+        # send the message.
+        myTeamsMessage.send()
+        
+    return {'success': True}
 
 # Reponse to more than one channel
-def slackConversations():
-    pass
+# def slackConversations():
     # # Getting channels
     # conv_list_url = "https://slack.com/api/conversations.list?token=" + token
     # resp_conv_list = make_request(conv_list_url)
@@ -136,14 +183,6 @@ def slackConversations():
     # for channel in bot_channels:
     #     conv_hist = "https://slack.com/api/conversations.history?token=" + token + "&channel=" + channel['id'] + "&inclusive=true&limit=1"
     #     response_msgs.append(make_request(conv_hist))
-
-# slackConversation()
-# Simple build
-# query = "Hello my friend"
-# print("We need to receive this in a json request: %s" % query)
-# print("We need to send this in a json response: %s" % chatbot_response(query))
-
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
