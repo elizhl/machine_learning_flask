@@ -23,16 +23,16 @@ class Vault:
         return self.client.lookup_token()['data']
     
     def get_audit_devices(self):
-        return self.client.lookup_token()['data']
+        return self.client.sys.list_enabled_audit_devices()['data']
     
     def get_auth_methods(self):
-        return self.client.lookup_token()['data']
+        return self.client.sys.list_auth_methods()['data']
     
-    def disable_auth_method(self):
-        return self.client.lookup_token()['data']
+    # def disable_auth_method(self):
+    #     return self.client.lookup_token()['data']
     
-    def revoke_token(self):
-        return self.client.lookup_token()['data']
+    # def revoke_token(self):
+    #     return self.client.lookup_token()['data']
     
-    def read_secret(self):
-        return self.client.lookup_token()['data']
+    # def read_secret(self):
+    #     return self.client.lookup_token()['data']

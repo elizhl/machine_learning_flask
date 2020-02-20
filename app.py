@@ -90,6 +90,14 @@ def getResponse(ints, intents_json):
                 result = vault.get_status()
             elif tag == "status":
                 result = vault.get_status()
+            elif tag == "auditdevices":
+                result = vault.get_audit_devices()
+            elif tag == "authmethods":
+                result = vault.get_auth_methods()
+            elif tag == "root":
+                result = vault.is_root()
+            elif tag == "identity":
+                result = vault.get_identity()
             else:
                 result = random.choice(i['responses'])
             break
@@ -119,7 +127,7 @@ def get_answer():
 @app.route('/slack/get-answer', methods=['POST', 'GET'])
 def slack_get_answer():
     # Slack bot token
-    token = "xoxb-918589458594-931400580288-XUGueuC5873ZhDy6yG51nu89"
+    token = ""
     
     # Check if this request is a handshake
     if request.json.get('challenge', False):
@@ -136,7 +144,7 @@ def slack_get_answer():
             
             # send the message
             slack_client = SlackClient(token)
-            slack_client.api_call("chat.postMessage", channel="#robochat", text=res)
+            raq = slack_client.api_call("chat.postMessage", channel="#robochat", text=res)
             
         return {'success': True}
     
