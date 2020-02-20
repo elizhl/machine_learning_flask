@@ -6,7 +6,5 @@ services:
             - env.sh
         ports:
             - "5000:5000"
-        volumes:
-            - .:/app
         networks:
             - default
