@@ -81,7 +81,7 @@
         "Give me your uptime"
       ],
       "responses": [
-        "This is not the response you're looking for, but we have to connect this bot to Vault to show you the uptime :-)"
+        "This is not the response you're looking for, but we have to upgrade this bot to give yo a right response :-)"
       ],
       "context": [""]
     },
@@ -91,7 +91,7 @@
         "Give me the vault status"
       ],
       "responses": [
-        "for, but we have to connect this bot to Vault to show you the uptime :-)"
+        "Custom answer"
       ],
       "context": [""]
     },
@@ -102,7 +102,7 @@
         "This token belongs to root?"
       ],
       "responses": [
-        "se you're looking for, but we have to connect this uptime :-)"
+        "Custom answer"
       ],
       "context": [""]
     },
@@ -113,7 +113,7 @@
         "Give me the enable devices"
       ],
       "responses": [
-        "ault to show you the uptime :-)"
+        "Custom answer"
       ],
       "context": [""]
     },
@@ -125,7 +125,7 @@
         "What auth methods are enabled?"
       ],
       "responses": [
-        "This ooking for, but we have to connect this bot to Vault toe :-)"
+        "Custom answer"
       ],
       "context": [""]
     },
@@ -135,7 +135,7 @@
         "Please disable this auth method"
       ],
       "responses": [
-        "This is not the we have to connect this bot toe uptime :-)"
+        "Custom answer"
       ],
       "context": [""]
     },
@@ -145,7 +145,7 @@
         "Please revoke this token"
       ],
       "responses": [
-        "This is not the respon for, but we ault to show you the uptime :-)"
+        "Custom answer"
       ],
       "context": [""]
     },
@@ -155,7 +155,19 @@
         "Show me this secret"
       ],
       "responses": [
-        "This is not the  to connect this bot to Vaultow you the uptime :-)"
+        "Custom answer"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "identity",
+      "patterns": [
+        "Show me the identity",
+        "What is your identity",
+        "Identity information"
+      ],
+      "responses": [
+        "Custom answer"
       ],
       "context": [""]
     }

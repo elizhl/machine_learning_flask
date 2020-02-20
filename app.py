@@ -28,9 +28,6 @@ intents = json.loads(open(data_json).read())
 words = pickle.load(open(words_file, 'rb'))
 tags = pickle.load(open(tags_file, 'rb'))
 
-print("this is tags", tags)
-print("this is words", words)
-
 npl = spacy.load('en_core_web_sm')
 
 addr = os.environ['VAULT_ADDR']
@@ -49,7 +46,7 @@ def clean_up_sentence(sentence):
     return response
 
 # return bag of words array: 0 or 1 for each word in the bag that exists in the sentence
-def bow(sentence, words, show_details=True):
+def bow(sentence, words, show_details=False):
     # tokenize the pattern
     sentence_words = clean_up_sentence(sentence)
     # bag of words - matrix of N words, vocabulary matrix
@@ -86,16 +83,14 @@ def getResponse(ints, intents_json):
     for i in list_of_intents:
         if(i['tag']== tag):
             # Check tags to call vault when necessary        
-            if tag == "uptime":
+            if tag == "status":
                 result = vault.get_status()
-            elif tag == "status":
-                result = vault.get_status()
+            elif tag == "root":
+                result = vault.is_root()
             elif tag == "auditdevices":
                 result = vault.get_audit_devices()
             elif tag == "authmethods":
                 result = vault.get_auth_methods()
-            elif tag == "root":
-                result = vault.is_root()
             elif tag == "identity":
                 result = vault.get_identity()
             else:
@@ -135,16 +130,25 @@ def slack_get_answer():
     
     else:
         # Check if the last event was a bot response
-        if not request.json['event'].get('bot_id', False):
-            # Get the message
-            msg = request.json['event']['text']
+        if not request.json['event'].get('bot_id', False) and request.json['event']['channel'] == "CUBKCGJNB":
             
-            # Get the response
-            res = chatbot_response(msg)
+            if request.json['event'].get('subtype', False) == "channel_join":
+                res = "Welcome <@" + request.json['event'].get('user', "") + ">"
+                
+            elif request.json['event'].get('text', False):
+                # Get the message
+                msg = request.json['event']['text']
             
+                # Get the response
+                res = chatbot_response(msg)
+
+            else:
+                res = False
+                
             # send the message
-            slack_client = SlackClient(token)
-            raq = slack_client.api_call("chat.postMessage", channel="#robochat", text=res)
+            if res:
+                slack_client = SlackClient(token)
+                raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=res)
             
         return {'success': True}
     
