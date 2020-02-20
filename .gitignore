@@ -1,2 +1,5 @@
 .env
 __pycache__
+tags.pkl
+words.pkl
+chatbot_model.h5
