@@ -129,20 +129,23 @@ def slack_get_answer():
         return {'challenge': request.json.get('challenge')}
     
     else:
-        # Check if the last event was a bot response
+        # Check if the last event was a bot response and it's from the right channel
         if not request.json['event'].get('bot_id', False) and request.json['event']['channel'] == "CUBKCGJNB":
             
+            # Check if the message it's a channel join
             if request.json['event'].get('subtype', False) == "channel_join":
                 res = "Welcome <@" + request.json['event'].get('user', "") + ">"
-                
+            
+            # Get message
             elif request.json['event'].get('text', False):
-                # Get the message
+                
                 msg = request.json['event']['text']
             
                 # Get the response
                 res = chatbot_response(msg)
 
             else:
+                # Unknown event
                 res = False
                 
             # send the message
