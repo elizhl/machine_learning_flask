@@ -3,7 +3,7 @@ services:
     web:
         build: .
         environment:
-            - VAULT_ADDR=http://172.17.0.1:8300
+            - VAULT_ADDR=http://vault:8300
             - VAULT_TOKEN="mytoken"
         ports:
             - "5000:5000"
