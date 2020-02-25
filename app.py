@@ -93,6 +93,8 @@ def getResponse(ints, intents_json):
                 result = vault.get_auth_methods()
             elif tag == "identity":
                 result = vault.get_identity()
+            elif tag == "metricts":
+                result = vault.get_metrics()
             else:
                 result = random.choice(i['responses'])
             break
