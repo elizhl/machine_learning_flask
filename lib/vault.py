@@ -43,6 +43,9 @@ class Vault:
     def get_secrets_engine_list(self):
         return self.client.sys.list_mounted_secrets_engines()['data']
 
+    def uptime(self):
+        return "We need to improve this"
+
     def get_metricts(self):
         return requests.get(
             self.addr + "/v1/sys/metrics?format=", 
