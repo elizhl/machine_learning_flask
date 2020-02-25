@@ -5,6 +5,7 @@ from flask import request
 from keras.models import load_model
 from slackclient import SlackClient
 from lib.vault import Vault
+from lib.github import Github
 
 import keras.backend as kb
 import keras.backend.tensorflow_backend as tb
@@ -34,6 +35,7 @@ addr = os.environ['VAULT_ADDR']
 token = os.environ['VAULT_TOKEN']
 
 vault = Vault(addr, token)
+github = Github()
 
 def clean_up_sentence(sentence):
     response = []
@@ -63,10 +65,10 @@ def bow(sentence, words, show_details=False):
 def predict_class(sentence):
     # filter out predictions below a threshold
     p = bow(sentence, words)
-    
+
     file_model = 'chatbot_model.h5'
     model = load_model(file_model)
-    
+
     res = model.predict(np.array([p]))[0]
     ERROR_THRESHOLD = 0.25
     results = [[i,r] for i,r in enumerate(res) if r>ERROR_THRESHOLD]
@@ -82,7 +84,7 @@ def getResponse(ints, intents_json):
     list_of_intents = intents_json['intents']
     for i in list_of_intents:
         if(i['tag']== tag):
-            # Check tags to call vault when necessary        
+            # Check tags to call vault when necessary
             if tag == "status":
                 result = vault.get_status()
             elif tag == "root":
@@ -110,7 +112,14 @@ def getResponse(ints, intents_json):
             elif tag == "information":
                 result = vault.get_general_information()
             elif tag == "version":
-                result = vault.get_version()
+                versions = github.get_latest_releases()
+                current = vault.get_version()['version']
+                latest = versions[0].lstrip('v')
+
+                if latest == current:
+                    result = 'You already have the latest version of Vault installed: {}'.format(current)
+                else:
+                    result = 'Vault installed version is: {}, the latest is: {}'.format(current, latest)
             elif tag == "features":
                 result = vault.get_features()
             elif tag == "apps":
@@ -134,16 +143,16 @@ def chatbot_response(msg):
 # Http Endpoint
 @app.route('/get-answer', methods=['POST'])
 def get_answer():
-    
+
     kb.clear_session()
     tb._SYMBOLIC_SCOPE.value = True
-        
+
     msg = request.form.get('msg', False)
     res = chatbot_response(msg)
 
     if not res:
         return {'success': False, 'answer': ""}
-    
+
     return {'success': True, 'answer': res}
 
 # Slack Implementation
@@ -151,52 +160,52 @@ def get_answer():
 def slack_get_answer():
     # Slack bot token
     token = ""
-    
+
     # Check if this request is a handshake
     if request.json.get('challenge', False):
         return {'challenge': request.json.get('challenge')}
-    
+
     else:
         # Check if the last event was a bot response and it's from the right channel
         if not request.json['event'].get('bot_id', False) and request.json['event']['channel'] == "CUBKCGJNB":
-            
+
             # Check if the message it's a channel join
             if request.json['event'].get('subtype', False) == "channel_join":
                 res = "Welcome <@" + request.json['event'].get('user', "") + ">"
-            
+
             # Get message
             elif request.json['event'].get('text', False):
-                
+
                 msg = request.json['event']['text']
-            
+
                 # Get the response
                 res = chatbot_response(msg)
 
             else:
                 # Unknown event
                 res = False
-                
+
             # send the message
             if res:
                 slack_client = SlackClient(token)
                 raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=res)
-                
+
         return {'success': True}
-    
+
 # Microsoft Teams Implementation
 @app.route('/mt/get-answer', methods=['POST', 'GET'])
 def mt_get_answer():
     msg = request.json.get('text', False)
-    
+
     if msg:
         res = chatbot_response(msg)
-        
+
         webhook_url = "https://outlook.office.com/webhook/\
                 66cbaada-14f1-4c2f-8639-22993cb92447@125b0b2a-\
                 fc11-406b-8ee5-edc4003afbf3/IncomingWebhook/92b\
                 01d770e4c44a6801c1a2062a9efaf/0dc1d84a-92f3-4bf4\
                 -82aa-4a9b6316e748"
-                
+
         # You must create the connectorcard object with the Microsoft Webhook URL
         myTeamsMessage = pymsteams.connectorcard(webhook_url)
 
@@ -205,7 +214,7 @@ def mt_get_answer():
 
         # send the message.
         myTeamsMessage.send()
-        
+
     return {'success': True}
 
 # Reponse to more than one channel
@@ -213,7 +222,7 @@ def mt_get_answer():
     # # Getting channels
     # conv_list_url = "https://slack.com/api/conversations.list?token=" + token
     # resp_conv_list = make_request(conv_list_url)
-    
+
     # # Getting id and name for every channel
     # if resp_conv_list.get('ok', False):
     #     bot_channels = [{
