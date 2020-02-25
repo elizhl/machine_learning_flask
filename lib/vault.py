@@ -36,3 +36,24 @@ class Vault:
             self.addr + "/v1/sys/metrics?format=", 
             headers={'X-Vault-Token': self.token}
         ).json()
+    
+    # def disable_auth_method(self):
+    #     return self.client.lookup_token()['data']
+    
+    # def revoke_token(self):
+    #     return self.client.lookup_token()['data']
+    
+    # def read_secret(self):
+    #     return self.client.lookup_token()['data']
+    
+    def is_initialized(self):
+        return self.client.is_initialized()
+    
+    def get_policies(self):
+        return self.client.sys.list_policies()['data']['policies']
+    
+    def get_list_namespaces(self):
+        return self.client.sys.list_namespaces()
+    
+    def get_secrets_engine_list(self):
+        return self.client.sys.list_mounted_secrets_engines()['data']
