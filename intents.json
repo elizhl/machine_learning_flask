@@ -75,6 +75,16 @@
       "context": [""]
     },
     {
+      "tag": "fuck",
+      "patterns": [
+        "F*ck yourself"
+      ],
+      "responses": [
+        "Don't be rude please"
+      ],
+      "context": [""]
+    },
+    {
       "tag": "uptime",
       "patterns": [
         "Since when you are up?",
@@ -99,7 +109,8 @@
       "tag": "root",
       "patterns": [
         "Are you root?",
-        "This token belongs to root?"
+        "This token belongs to root?",
+        "Am I root?"
       ],
       "responses": [
         "Custom answer"
@@ -110,7 +121,8 @@
       "tag": "auditdevices",
       "patterns": [
         "Enabled devices",
-        "Give me the enable devices"
+        "Give me the enable devices",
+        "Audit devices"
       ],
       "responses": [
         "Custom answer"
@@ -130,36 +142,6 @@
       "context": [""]
     },
     {
-      "tag": "disableauthmethod",
-      "patterns": [
-        "Please disable this auth method"
-      ],
-      "responses": [
-        "Custom answer"
-      ],
-      "context": [""]
-    },
-    {
-      "tag": "revoketoken",
-      "patterns": [
-        "Please revoke this token"
-      ],
-      "responses": [
-        "Custom answer"
-      ],
-      "context": [""]
-    },
-    {
-      "tag": "readsecret",
-      "patterns": [
-        "Show me this secret"
-      ],
-      "responses": [
-        "Custom answer"
-      ],
-      "context": [""]
-    },
-    {
       "tag": "identity",
       "patterns": [
         "Show me the identity",
@@ -172,20 +154,164 @@
       "context": [""]
     },
     {
-      "tag": "fuck",
-      "patterns": [
-        "F*ck yourself"
-      ],
-      "responses": [
-        "Don't be rude please"
-      ],
-      "context": [""]
-    },
-    {
       "tag": "metrics",
       "patterns": [
         "Give me the vault metrics",
         "Do you hace any metricts"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "authenticated",
+      "patterns": [
+        "Am I authenticated?",
+        "This token is authenticated"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "initialized",
+      "patterns": [
+        "This istance is initialized?",
+        "Initialized information"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "policies",
+      "patterns": [
+        "Read policies",
+        "Give me my policies"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "namespaces",
+      "patterns": [
+        "Read namespaces",
+        "Give me my namespaces"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "secretsengine",
+      "patterns": [
+        "Read secrets engine",
+        "Give me the list of secrets engine"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "secretsengine",
+      "patterns": [
+        "Read secrets engine",
+        "Give me my secrets engine"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "leases",
+      "patterns": [
+        "Get leases information",
+        "Expire leases",
+        "Extant leases"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "configuration",
+      "patterns": [
+        "Vault configuration",
+        "What configuration has this instance"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "health",
+      "patterns": [
+        "Vault health",
+        "How healthy is this instance"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "information",
+      "patterns": [
+        "Quick check",
+        "Information about vault"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "version",
+      "patterns": [
+        "Vault version",
+        "Show me my vault version"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "features",
+      "patterns": [
+        "Features integrated",
+        "What features do we have integrated"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "apps",
+      "patterns": [
+        "Integrated apps",
+        "Most valuable app"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
+    },
+    {
+      "tag": "wrapping",
+      "patterns": [
+        "Wrapping this information"
       ],
       "responses": [
         "Custom response"
