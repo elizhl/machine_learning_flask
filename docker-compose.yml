@@ -9,19 +9,21 @@ services:
             - "5000:5000"
         links:
             - "vault"
+        restart: always
     vault:
-      image: vault:latest
-      volumes:
-        - ./vault/config:/vault/config
-        - ./vault/policies:/vault/policies
-        - ./vault/data:/vault/data
-      ports:
-        - "8300:8300"
-      environment:
-        - VAULT_ADDR=http://0.0.0.0:8300
-        - VAULT_API_ADDR=http://0.0.0.0:8300
-        - VAULT_ADDRESS=http://0.0.0.0:8300
-        - VAULT_DEV_ROOT_TOKEN_ID="mytoken"
-      cap_add:
-        - IPC_LOCK
-      command: vault server -dev -config=vault/config/vault-config.hcl
+        image: vault:latest
+        volumes:
+          - ./vault/config:/vault/config
+          - ./vault/policies:/vault/policies
+          - ./vault/data:/vault/data
+        ports:
+          - "8300:8300"
+        environment:
+          - VAULT_ADDR=http://0.0.0.0:8300
+          - VAULT_API_ADDR=http://0.0.0.0:8300
+          - VAULT_ADDRESS=http://0.0.0.0:8300
+          - VAULT_DEV_ROOT_TOKEN_ID="mytoken"
+        cap_add:
+          - IPC_LOCK
+        restart: always
+        command: vault server -dev -config=vault/config/vault-config.hcl
