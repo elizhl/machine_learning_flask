@@ -1,7 +1,10 @@
 import hvac
+import requests
 
 class Vault:
     def __init__(self, addr, token):
+        self.token = token
+        self.addr = addr
         self.client = hvac.Client(addr, token)
 
     def is_authenticated(self):
@@ -27,12 +30,9 @@ class Vault:
     
     def get_auth_methods(self):
         return self.client.sys.list_auth_methods()['data']
-    
-    # def disable_auth_method(self):
-    #     return self.client.lookup_token()['data']
-    
-    # def revoke_token(self):
-    #     return self.client.lookup_token()['data']
-    
-    # def read_secret(self):
-    #     return self.client.lookup_token()['data']
+
+    def get_metricts(self):
+        return requests.get(
+            self.addr + "/v1/sys/metrics?format=", 
+            headers={'X-Vault-Token': self.token}
+        ).json()

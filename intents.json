@@ -180,6 +180,17 @@
         "Don't be rude please"
       ],
       "context": [""]
+    },
+    {
+      "tag": "metrics",
+      "patterns": [
+        "Give me the vault metrics",
+        "Do you hace any metricts"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
     }
   ]
 }
