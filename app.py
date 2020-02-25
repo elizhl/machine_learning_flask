@@ -101,8 +101,26 @@ def getResponse(ints, intents_json):
                 result = vault.get_list_namespaces()
             elif tag == "secrestengine":
                 result = vault.get_secrets_engine_list()
-            elif tag == "initialized":
-                result = vault.is_initialized()
+            elif tag == "leases":
+                result = vault.get_expire_leases()
+            elif tag == "configuration":
+                result = vault.get_configuration()
+            elif tag == "health":
+                result = vault.get_health()
+            elif tag == "information":
+                result = vault.get_general_information()
+            elif tag == "version":
+                result = vault.get_version()
+            elif tag == "features":
+                result = vault.get_features()
+            elif tag == "apps":
+                result = vault.get_integrated_apps()
+            elif tag == "wrapping":
+                result = vault.wrapping()
+            elif tag == "uptime":
+                result = vault.uptime()
+            elif tag == "authenticated":
+                result = vault.is_authenticated()
             else:
                 result = random.choice(i['responses'])
             break
@@ -132,7 +150,7 @@ def get_answer():
 @app.route('/slack/get-answer', methods=['POST', 'GET'])
 def slack_get_answer():
     # Slack bot token
-    token = "xoxb-918589458594-931400580288-OrC9Pf1UXwEim8KywERo8DSZ"
+    token = ""
     
     # Check if this request is a handshake
     if request.json.get('challenge', False):
@@ -162,7 +180,7 @@ def slack_get_answer():
             if res:
                 slack_client = SlackClient(token)
                 raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=res)
-            
+                
         return {'success': True}
     
 # Microsoft Teams Implementation
