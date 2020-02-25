@@ -31,21 +31,6 @@ class Vault:
     def get_auth_methods(self):
         return self.client.sys.list_auth_methods()['data']
 
-    def get_metricts(self):
-        return requests.get(
-            self.addr + "/v1/sys/metrics?format=", 
-            headers={'X-Vault-Token': self.token}
-        ).json()
-    
-    # def disable_auth_method(self):
-    #     return self.client.lookup_token()['data']
-    
-    # def revoke_token(self):
-    #     return self.client.lookup_token()['data']
-    
-    # def read_secret(self):
-    #     return self.client.lookup_token()['data']
-    
     def is_initialized(self):
         return self.client.is_initialized()
     
@@ -57,3 +42,57 @@ class Vault:
     
     def get_secrets_engine_list(self):
         return self.client.sys.list_mounted_secrets_engines()['data']
+
+    def get_metricts(self):
+        return requests.get(
+            self.addr + "/v1/sys/metrics?format=", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def get_expire_leases(self):
+        return requests.get(
+            self.addr + "/v1/sys/leases", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def get_configuration(self):
+        return requests.get(
+            self.addr + "/v1/sys/config/state", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def get_health(self):
+        return requests.get(
+            self.addr + "/v1/sys/health", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def get_general_information(self):
+        return requests.get(
+            self.addr + "/v1/sys/host-info", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def get_version(self):
+        return requests.get(
+            self.addr + "/v1/sys/health", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def get_features(self):
+        return requests.get(
+            self.addr + "/v1/sys/license", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def get_integrated_apps(self):
+        return requests.get(
+            self.addr + "/v1/sys/mounts", 
+            headers={'X-Vault-Token': self.token}
+        ).json()
+
+    def wrapping(self, function):
+        return requests.get(
+            self.addr + "/v1/sys/wrapping/" + function, 
+            headers={'X-Vault-Token': self.token}
+        ).json()
