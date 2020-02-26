@@ -99,6 +99,7 @@ def getResponse(ints, intents_json):
                 result = vault.get_metrics()
             elif tag == "policies":
                 result = vault.get_policies()
+                result = ", ".join(result)
             elif tag == "namespaces":
                 result = vault.get_list_namespaces()
             elif tag == "secretsengine":
@@ -151,7 +152,7 @@ def get_answer():
 
     msg = request.form.get('msg', False)
     
-    if msg.find("metrics") >= 0:
+    if msg.lower().find("metrics") >= 0:
         res = requests.get(
             addr + "/v1/sys/metrics?format=", 
             headers={'X-Vault-Token': token}
@@ -189,7 +190,7 @@ def slack_get_answer():
 
                 msg = request.json['event']['text']
 
-                if msg.find("metrics") >= 0:
+                if msg.lower().find("metrics") >= 0:
                     res = requests.get(
                         addr + "/v1/sys/metrics?format=", 
                         headers={'X-Vault-Token': token}
@@ -205,7 +206,7 @@ def slack_get_answer():
             # send the message
             if res:
                 slack_client = SlackClient(sl_token)
-                raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=res)
+                raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=json.dumps(res, indent=4, sort_keys=True))
 
         return {'success': True}
 
