@@ -195,6 +195,9 @@ def slack_get_answer():
                         addr + "/v1/sys/metrics?format=", 
                         headers={'X-Vault-Token': token}
                     ).json()
+
+                elif msg.lower().find("configuration") >= 0:
+                    res = vault.get_configuration()
                 else:
                     # Get the response
                     res = chatbot_response(msg)
@@ -206,7 +209,7 @@ def slack_get_answer():
             # send the message
             if res:
                 slack_client = SlackClient(sl_token)
-                raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=json.dumps(res, indent=4, sort_keys=True))
+                raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=json.dumps(res, indent=4, sort_keys=True).strip("{").strip("}"))
 
         return {'success': True}
 

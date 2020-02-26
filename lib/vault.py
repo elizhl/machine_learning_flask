@@ -60,7 +60,7 @@ class Vault:
 
     def get_configuration(self):
         return requests.get(
-            self.addr + "/v1/sys/config/state", 
+            self.addr + "/v1/sys/config/state/sanitized", 
             headers={'X-Vault-Token': self.token}
         ).json()
 
