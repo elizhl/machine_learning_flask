@@ -113,7 +113,7 @@ def getResponse(ints, intents_json):
                 result = vault.get_general_information()
             elif tag == "version":
                 versions = github.get_latest_releases()
-                current = vault.get_version()['version']
+                current = vault.get_version()
                 latest = versions[0].lstrip('v')
 
                 if latest == current:
