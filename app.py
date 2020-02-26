@@ -198,6 +198,11 @@ def slack_get_answer():
 
                 elif msg.lower().find("configuration") >= 0:
                     res = vault.get_configuration()
+                elif msg.lower().find("leases") >= 0:
+                    res = requests.get(
+                        addr + "/v1/sys/metrics?format=", 
+                        headers={'X-Vault-Token': token}
+                    ).json()["Gauges"][0]
                 else:
                     # Get the response
                     res = chatbot_response(msg)
