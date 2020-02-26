@@ -150,7 +150,15 @@ def get_answer():
     tb._SYMBOLIC_SCOPE.value = True
 
     msg = request.form.get('msg', False)
-    res = chatbot_response(msg)
+    
+    if msg.find("metrics") >= 0:
+        res = requests.get(
+            addr + "/v1/sys/metrics?format=", 
+            headers={'X-Vault-Token': token}
+        ).json()
+    else:
+        res = chatbot_response(msg)
+
 
     if not res:
         return {'success': False, 'answer': ""}
@@ -162,7 +170,7 @@ def get_answer():
 def slack_get_answer():
     # Slack bot token
     arr_token = ("xoxb", "918589458594", "931400580288", "9LrOqSiT1GEKFftbqrfRXhD4")
-    token = "-".join(arr_token)
+    sl_token = "-".join(arr_token)
     
     # Check if this request is a handshake
     if request.json.get('challenge', False):
@@ -181,8 +189,14 @@ def slack_get_answer():
 
                 msg = request.json['event']['text']
 
-                # Get the response
-                res = chatbot_response(msg)
+                if msg.find("metrics") >= 0:
+                    res = requests.get(
+                        addr + "/v1/sys/metrics?format=", 
+                        headers={'X-Vault-Token': token}
+                    ).json()
+                else:
+                    # Get the response
+                    res = chatbot_response(msg)
 
             else:
                 # Unknown event
@@ -190,7 +204,7 @@ def slack_get_answer():
 
             # send the message
             if res:
-                slack_client = SlackClient(token)
+                slack_client = SlackClient(sl_token)
                 raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=res)
 
         return {'success': True}
