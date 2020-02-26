@@ -120,9 +120,8 @@
     {
       "tag": "auditdevices",
       "patterns": [
-        "Enabled devices",
-        "Give me the enable devices",
-        "Audit devices"
+        "Give me the enabled devices",
+        "Devices"
       ],
       "responses": [
         "Custom answer"
@@ -156,8 +155,8 @@
     {
       "tag": "metrics",
       "patterns": [
-        "Give me the vault metrics",
-        "Do you hace any metricts"
+        "Give me the metrics",
+        "Do you have any metrics"
       ],
       "responses": [
         "Custom response"
@@ -198,28 +197,6 @@
       "context": [""]
     },
     {
-      "tag": "namespaces",
-      "patterns": [
-        "Read namespaces",
-        "Give me my namespaces"
-      ],
-      "responses": [
-        "Custom response"
-      ],
-      "context": [""]
-    },
-    {
-      "tag": "secretsengine",
-      "patterns": [
-        "Read secrets engine",
-        "Give me the list of secrets engine"
-      ],
-      "responses": [
-        "Custom response"
-      ],
-      "context": [""]
-    },
-    {
       "tag": "secretsengine",
       "patterns": [
         "Read secrets engine",
@@ -236,17 +213,6 @@
         "Get leases information",
         "Expire leases",
         "Extant leases"
-      ],
-      "responses": [
-        "Custom response"
-      ],
-      "context": [""]
-    },
-    {
-      "tag": "configuration",
-      "patterns": [
-        "Vault configuration",
-        "What configuration has this instance"
       ],
       "responses": [
         "Custom response"
@@ -278,8 +244,8 @@
     {
       "tag": "version",
       "patterns": [
-        "Vault version",
-        "Show me my vault version"
+        "Version",
+        "Show the version"
       ],
       "responses": [
         "Custom response"

@@ -80,7 +80,7 @@ class Vault:
         return requests.get(
             self.addr + "/v1/sys/health", 
             headers={'X-Vault-Token': self.token}
-        ).json()
+        ).json()['version']
 
     def get_features(self):
         return requests.get(
