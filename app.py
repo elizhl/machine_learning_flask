@@ -161,8 +161,8 @@ def get_answer():
 @app.route('/slack/get-answer', methods=['POST', 'GET'])
 def slack_get_answer():
     # Slack bot token
-    arr_token = ["xoxb", "918589458594", "931400580288", "9LrOqSiT1GEKFftbqrfRXhD4"]
-    token = arr_token.join("-")
+    arr_token = ("xoxb", "918589458594", "931400580288", "9LrOqSiT1GEKFftbqrfRXhD4")
+    token = "-".join(arr_token)
     
     # Check if this request is a handshake
     if request.json.get('challenge', False):
