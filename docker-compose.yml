@@ -5,6 +5,7 @@ services:
         environment:
             - VAULT_ADDR=http://vault:8300
             - VAULT_TOKEN="mytoken"
+            - "PYTHONUNBUFFERED: 1"
         ports:
             - "5000:5000"
         links:
