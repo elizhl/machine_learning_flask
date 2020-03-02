@@ -6,6 +6,8 @@ from keras.models import load_model
 from slackclient import SlackClient
 from lib.vault import Vault
 from lib.github import Github
+from lib.suggestions import Suggestions
+from apscheduler.schedulers.background import BackgroundScheduler
 
 import keras.backend as kb
 import keras.backend.tensorflow_backend as tb
@@ -18,6 +20,7 @@ import random
 import spacy
 import requests
 import pymsteams
+import atexit
 
 app = Flask(__name__)
 
@@ -36,6 +39,15 @@ token = os.environ['VAULT_TOKEN']
 
 vault = Vault(addr, token)
 github = Github()
+suggestions = Suggestions()
+
+# Scheduled Tasks
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=suggestions.suggest_version, trigger="interval", hours=1)
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 def clean_up_sentence(sentence):
     response = []
@@ -189,23 +201,7 @@ def slack_get_answer():
             elif request.json['event'].get('text', False):
 
                 msg = request.json['event']['text']
-
-                if msg.lower().find("metrics") >= 0:
-                    res = requests.get(
-                        addr + "/v1/sys/metrics?format=", 
-                        headers={'X-Vault-Token': token}
-                    ).json()
-
-                elif msg.lower().find("configuration") >= 0:
-                    res = vault.get_configuration()
-                elif msg.lower().find("leases") >= 0:
-                    res = requests.get(
-                        addr + "/v1/sys/metrics?format=", 
-                        headers={'X-Vault-Token': token}
-                    ).json()["Gauges"][0]
-                else:
-                    # Get the response
-                    res = chatbot_response(msg)
+                res = chatbot_response(msg)
 
             else:
                 # Unknown event
@@ -214,7 +210,7 @@ def slack_get_answer():
             # send the message
             if res:
                 slack_client = SlackClient(sl_token)
-                raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=json.dumps(res, indent=4, sort_keys=True).strip("{").strip("}"))
+                raq = slack_client.api_call("chat.postMessage", channel=request.json['event']['channel'], text=res) # json.dumps(res, indent=4, sort_keys=True).strip("{").strip("}"))
 
         return {'success': True}
 
@@ -263,4 +259,5 @@ def mt_get_answer():
     #     response_msgs.append(make_request(conv_hist))
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True, use_reloader=False)
+
