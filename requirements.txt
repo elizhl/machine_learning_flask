@@ -1,4 +1,5 @@
 absl-py==0.9.0
+apscheduler
 astor==0.8.1
 blis==0.4.1
 catalogue==1.0.0
