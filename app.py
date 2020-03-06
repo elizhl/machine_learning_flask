@@ -43,7 +43,8 @@ suggestions = Suggestions()
 
 # Scheduled Tasks
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=suggestions.suggest_version, trigger="interval", hours=1)
+scheduler.add_job(func=suggestions.suggest_version, trigger="interval", minutes=59)
+scheduler.add_job(func=suggestions.adoption_stats, trigger="interval", hours=1)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
@@ -115,7 +116,7 @@ def getResponse(ints, intents_json):
             elif tag == "namespaces":
                 result = vault.get_list_namespaces()
             elif tag == "secretsengine":
-                result = vault.get_secrets_engine_list()
+                result = str(vault.get_secrets_engine_list())
             elif tag == "leases":
                 result = vault.get_expire_leases()
             elif tag == "configuration":
@@ -125,14 +126,8 @@ def getResponse(ints, intents_json):
             elif tag == "information":
                 result = vault.get_general_information()
             elif tag == "version":
-                versions = github.get_latest_releases()
-                current = vault.get_version()
-                latest = versions[0].lstrip('v')
-
-                if latest == current:
-                    result = 'You already have the latest version of Vault installed: {}'.format(current)
-                else:
-                    result = 'Vault installed version is: {}, the latest is: {}'.format(current, latest)
+                suggestions.suggest_version()
+                result = False
             elif tag == "features":
                 result = vault.get_features()
             elif tag == "apps":
@@ -145,6 +140,8 @@ def getResponse(ints, intents_json):
                 result = vault.is_authenticated()
             elif tag == "initialized":
                 result = vault.is_initialized()
+            elif tag == "adoptionstats":
+                result = suggestions.adoption_stats_detailed()
             else:
                 result = random.choice(i['responses'])
             break
