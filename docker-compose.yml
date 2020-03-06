@@ -4,7 +4,7 @@ services:
         build: .
         environment:
             - VAULT_ADDR=http://vault:8300
-            - VAULT_TOKEN="mytoken"
+            - VAULT_TOKEN=mytoken
             - "PYTHONUNBUFFERED: 1"
         ports:
             - "5000:5000"
@@ -23,7 +23,7 @@ services:
           - VAULT_ADDR=http://0.0.0.0:8300
           - VAULT_API_ADDR=http://0.0.0.0:8300
           - VAULT_ADDRESS=http://0.0.0.0:8300
-          - VAULT_DEV_ROOT_TOKEN_ID="mytoken"
+          - VAULT_DEV_ROOT_TOKEN_ID=mytoken
         cap_add:
           - IPC_LOCK
         restart: always
