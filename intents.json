@@ -283,6 +283,16 @@
         "Custom response"
       ],
       "context": [""]
+    },
+    {
+      "tag": "adoptionstats",
+      "patterns": [
+        "Adoption Details 2"
+      ],
+      "responses": [
+        "Custom response"
+      ],
+      "context": [""]
     }
   ]
 }
