@@ -1,0 +1,17 @@
+kind: pipeline
+type: docker
+name: image builder 
+
+steps:
+  - name: publish
+    image: plugins 
+    settings: 
+        registry:
+           from_secret: MLF_REGISTRY
+        repo:
+           from_secret: MLF_REPO
+trigger:
+  branch:
+  - drone-meddlings
+  event:
+  - push
