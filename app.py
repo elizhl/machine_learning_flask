@@ -43,8 +43,9 @@ suggestions = Suggestions()
 
 # Scheduled Tasks
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=suggestions.suggest_version, trigger="interval", minutes=59)
-scheduler.add_job(func=suggestions.adoption_stats, trigger="interval", hours=1)
+scheduler.add_job(func=suggestions.suggest_version, trigger="interval", minutes=20)
+scheduler.add_job(func=suggestions.adoption_stats, trigger="interval", minutes=23)
+scheduler.add_job(func=suggestions.extant_leases, trigger="interval", minutes=26)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
