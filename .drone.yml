@@ -14,7 +14,7 @@ steps:
            from_secret: REGION
 trigger:
   branch:
-  - drone-meddlings
+  - master
   event:
   - push
   - pull_request
