@@ -37,7 +37,7 @@ class Suggestions:
             self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Action: Download")
 
             # Source
-            text = "https://releases.hashicorp.com/vault/1.3.2/vault_1.3.2_linux_amd64.zip"
+            text = "https://releases.hashicorp.com/vault/1.3.3/vault_1.3.3_linux_amd64.zip"
             self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text=text)
 
             text2 = "and install it to vaultserver1.uat.acmecorp.net, vaultserver2.uat.acmecorp.net, and vaultserver3.uat.acmecorp.net."
