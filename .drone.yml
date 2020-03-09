@@ -1,0 +1,20 @@
+kind: pipeline
+type: docker
+name: image builder 
+
+steps:
+  - name: publish
+    image: plugins/ecr 
+    settings: 
+        registry:
+           from_secret: MLF_REGISTRY
+        repo:
+           from_secret: MLF_REPO
+        region:
+           from_secret: REGION
+trigger:
+  branch:
+  - master
+  event:
+  - push
+  - pull_request
