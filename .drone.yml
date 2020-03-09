@@ -17,3 +17,4 @@ trigger:
   - drone-meddlings
   event:
   - push
+  - pull_request
