@@ -4,7 +4,7 @@ name: image builder
 
 steps:
   - name: publish
-    image: plugins 
+    image: plugins/ecr 
     settings: 
         registry:
            from_secret: MLF_REGISTRY
