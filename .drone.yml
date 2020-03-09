@@ -10,6 +10,8 @@ steps:
            from_secret: MLF_REGISTRY
         repo:
            from_secret: MLF_REPO
+        region:
+           from_secret: REGION
 trigger:
   branch:
   - drone-meddlings
