@@ -12,9 +12,11 @@ steps:
            from_secret: MLF_REPO
         region:
            from_secret: REGION
+        tags:
+          - latest
+          - $(DRONE_TAG)
 trigger:
   branch:
   - master
   event:
-  - push
-  - pull_request
+  - tag
