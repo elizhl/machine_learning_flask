@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - drone-meddlings 
   pull_request:
     branches:
       - master
