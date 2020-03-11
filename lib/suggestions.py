@@ -103,7 +103,7 @@ class Suggestions:
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="*Extant Leases*")
         
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="You have {} leases in Vault".format(self.vault.get_total_leases()))
-        self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} no renewable".format(leases_detail['non_renewable']))
+        self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} non renewable".format(leases_detail['non_renewable']))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} renewable".format(leases_detail['renewable']))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Longest expire time: {}".format(leases_detail['longest']))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Longest remaining ttl: {}".format(leases_detail['longest_ttl']))
