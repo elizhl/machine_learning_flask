@@ -14,7 +14,7 @@ steps:
            from_secret: REGION
         tags:
           - latest
-          - $(DRONE_TAG)
+          - ${DRONE_TAG}
 trigger:
   branch:
   - master
