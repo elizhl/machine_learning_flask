@@ -7,6 +7,7 @@ services:
             - VAULT_TOKEN=mytoken
         ports:
             - "5000:5000"
+            - "9090:9090"
         links:
             - "vault"
         restart: always
