@@ -9,6 +9,8 @@ from lib.github import Github
 from lib.suggestions import Suggestions
 from apscheduler.schedulers.background import BackgroundScheduler
 
+from multiprocessing import Process
+
 import keras.backend as kb
 import keras.backend.tensorflow_backend as tb
 
@@ -21,8 +23,13 @@ import spacy
 import requests
 import pymsteams
 import atexit
+import socket
+import arrow
 
 app = Flask(__name__)
+
+host = '0.0.0.0'
+port = 9090
 
 data_json = 'intents.json'
 words_file = 'words.pkl'
@@ -93,6 +100,47 @@ def predict_class(sentence):
         return_list.append({"intent": tags[r[0]], "probability": str(r[1])})
     return return_list
 
+def analize(data):
+    for d in data.split(b'\n'):
+        if not d:
+            return
+        j = json.loads(d)
+
+        id = get_lease_id(j)
+
+        if not id:
+            return
+
+        optimizable, time = used_time_greater_than_issued(id)
+        if optimizable:
+            message = "The expire time of the lease: {} is in {}".format(id, time)
+            suggestions.leases_ttl(message)
+
+def used_time_greater_than_issued(id):
+    response = vault.client.sys.read_lease(
+        lease_id = id,
+    )
+
+    expire_time = arrow.get(response["data"]["expire_time"])
+    issue_time = arrow.get(response["data"]["issue_time"])
+    now = arrow.utcnow().to("local")
+
+    remain_time = expire_time - now
+    used_time = now - issue_time
+
+    return remain_time > used_time, remain_time - used_time
+
+def get_lease_id(data):
+    if data['type'] == "request":
+        return
+
+    try:
+        id = data["response"]["secret"]["lease_id"]
+    except KeyError:
+        id = None
+
+    return id
+
 def getResponse(ints, intents_json):
     tag = ints[0]['intent']
     list_of_intents = intents_json['intents']
@@ -161,10 +209,10 @@ def get_answer():
     tb._SYMBOLIC_SCOPE.value = True
 
     msg = request.form.get('msg', False)
-    
+
     if msg.lower().find("metrics") >= 0:
         res = requests.get(
-            addr + "/v1/sys/metrics?format=", 
+            addr + "/v1/sys/metrics?format=",
             headers={'X-Vault-Token': token}
         ).json()
     else:
@@ -182,7 +230,7 @@ def slack_get_answer():
     # Slack bot token
     arr_token = ("xoxb", "918589458594", "931400580288", "9LrOqSiT1GEKFftbqrfRXhD4")
     sl_token = "-".join(arr_token)
-    
+
     # Check if this request is a handshake
     if request.json.get('challenge', False):
         return {'challenge': request.json.get('challenge')}
@@ -256,6 +304,28 @@ def mt_get_answer():
     #     conv_hist = "https://slack.com/api/conversations.history?token=" + token + "&channel=" + channel['id'] + "&inclusive=true&limit=1"
     #     response_msgs.append(make_request(conv_hist))
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, use_reloader=False)
+def socket_server():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((host, port))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            while True:
+                data = conn.recv(4096)
+                if not data:
+                    break
 
+                analize(data)
+
+def http_server():
+    app.run(host="0.0.0.0", debug=True, use_reloader=True)
+
+if __name__ == "__main__":
+    s = Process(target=socket_server)
+    h = Process(target=http_server)
+
+    s.start()
+    h.start()
+
+    print("The process of the socket server is {}".format(s.pid))
+    print("The process of the http server is ".format(h.pid))

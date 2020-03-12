@@ -19,7 +19,11 @@ class Suggestions:
         self.arr_token = ("xoxb", "918589458594", "931400580288", "9LrOqSiT1GEKFftbqrfRXhD4")
         self.sl_token = "-".join(self.arr_token)
         self.slack_client = SlackClient(self.sl_token)
-    
+
+    def leases_ttl(self, message):
+        # Suggestion
+        self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text=message)
+
     def suggest_version(self):
         versions = self.github.get_latest_releases()
         current = self.vault.get_version()
@@ -32,7 +36,7 @@ class Suggestions:
             # Reason
             because = "Because: You currently have a {}, and there is an update, Version {}.".format(current, latest)
             self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text=because)
-            
+
             # Action
             self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Action: Download")
 
@@ -45,7 +49,7 @@ class Suggestions:
 
             text3 = "Hashi Docs: https://www.vaultproject.io/docs/upgrading/index.html#ha-installations"
             self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text=text3)
-            
+
             # Internal docs
             internal = "Internal docs for this: confluence.acmecorp.net/vault-upgrade-manualconfluence.acmecorp.net/vault-upgrade-ansible"
             self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text=internal)
@@ -64,44 +68,44 @@ class Suggestions:
 
         # Suggestion
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="*Adoption Stats.* :bar_chart:")
-        
+
         # Check Logs
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Overall Adoption rate this week: {}".format(self.vault.get_overall_week()))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Overall Adoption rate this month: {}".format(self.vault.get_overall_month()))
-        
+
         # Dummy data
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Vault Operations this month: {}".format(total_operations))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Monthly BVA: ${} (Estimated)".format(total_operations * 500))
-        
+
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} Auth Methods".format(auth_methods))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} Policies".format(policies))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} Secrets Engines".format(secrets_engine))
-        
+
         # More Details
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="_Respond 'Adoption Details 2' for more._")
-        
+
         return True
 
     def adoption_stats_detailed(self):
-        
+
         total_entities = self.vault.get_total_entities_count().get('keys', [])
 
         # Suggestion
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="*Adoption Details* :bar_chart:")
-        
+
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Total Entities: {}".format(len(total_entities)))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Total Roles: {}".format(self.vault.get_total_roles()))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Total Tokens: {}".format(self.vault.get_total_tokens()))
-        
+
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Change: {}".format(self.vault.get_change_percentage()))
-                
+
         return False
 
     def extant_leases(self):
         leases_detail = self.vault.get_leases_detail()
         # Suggestion
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="*Extant Leases*")
-        
+
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="You have {} leases in Vault".format(self.vault.get_total_leases()))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} non renewable".format(leases_detail['non_renewable']))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} renewable".format(leases_detail['renewable']))
@@ -110,7 +114,7 @@ class Suggestions:
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Shortest expire time: {}".format(leases_detail['shortest'], leases_detail['shortest']))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Shortest remaining ttl: {}".format(leases_detail['shortest_ttl']))
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="Never expire: {}".format(leases_detail['infinite_ttl']))
-        
+
 
         # self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="_Respond Extant Leases Detail._")
 
@@ -126,10 +130,10 @@ class Suggestions:
     def total_tokens(self):
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="*Tokens*")
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} total".format(self.vault.get_total_tokens()))
-        
+
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} service tokens".format())
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} batch tokens".format())
         # self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="{} periodic Tokens".format(self.vault.get_auth_methods(namespace = namespace)))
-        
+
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="*Oldest:* {}".format())
         self.slack_client.api_call("chat.postMessage", channel="#vaultbot", text="*Newest:* {}".format())
