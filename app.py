@@ -43,9 +43,9 @@ suggestions = Suggestions()
 
 # Scheduled Tasks
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=suggestions.suggest_version, trigger="interval", minutes=20)
-scheduler.add_job(func=suggestions.adoption_stats, trigger="interval", minutes=23)
-scheduler.add_job(func=suggestions.extant_leases, trigger="interval", minutes=26)
+scheduler.add_job(func=suggestions.suggest_version, trigger="interval", hours=8)
+scheduler.add_job(func=suggestions.adoption_stats, trigger="interval", hours=7)
+scheduler.add_job(func=suggestions.extant_leases, trigger="interval", hours=9)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
@@ -189,7 +189,7 @@ def slack_get_answer():
 
     else:
         # Check if the last event was a bot response and it's from the right channel
-        if not request.json['event'].get('bot_id', False) and request.json['event']['channel'] == "CUBKCGJNB":
+        if not request.json['event'].get('bot_id', False):
 
             # Check if the message it's a channel join
             if request.json['event'].get('subtype', False) == "channel_join":
